@@ -19,7 +19,8 @@ Due to the complex code structure of the router's web interface and the usage of
 
 After having extracted the data from HTML dsTable (downstream table) and usTable (upstream table), the script processes the data :
   - Sorting data by channel and discarding channel 0
-  - Parsing Rx Power values
+  - Parsing values in data arrays
+  - Parsing Rx and Tx power in separate float values
  
 The script creates two arrays (ds_data and us_data) with one row per channel. Each rows is formated with following scheme:
  
