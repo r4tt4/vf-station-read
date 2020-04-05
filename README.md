@@ -49,3 +49,14 @@ The script output is the downstream and upstream DOCSIS data and can be processe
 
 <b>Script output sample</b>
 ![Script output Linux](screenshot-output-linux.png)
+
+<b>Pipe usage examples</b>
+
+Shows only Channels in 8QAM Modulation
+
+<code>./vodafone_station.py password | grep 8QAM</code>
+
+Shows only OFDM Channels
+
+<code>./vodafone_station.py password | grep OFDM</code>
+
