@@ -19,7 +19,7 @@ Due to the complex code structure of the router's web interface and the usage of
 
 After having extracted the data from HTML dsTable (downstream table) and usTable (upstream table), the script processes the data :
   - Sorting data by channel and discarding channel 0
-  - Parsing values in data arrays
+  - Parsing values in two 2D-arrays
   - Parsing Rx and Tx power in separate float values
  
 The script creates two arrays (ds_data and us_data) with one row per channel. Each rows is formated with following scheme:
@@ -45,7 +45,7 @@ The script creates two arrays (ds_data and us_data) with one row per channel. Ea
   - Tx Power in dBµV (float)
   - Ranging Status (bool)
  
-The script print the downstream and upstream DOCSIS data. The script output can be used by processed through pipeline to other processes. The script can be extended to further process the data in ds_data and us_data (e.g save to file or DB for monitoring or troubleshooting purposes).
+The script output is the downstream and upstream DOCSIS data and can be processed through pipeline to other processes. The script can be extended to other usage of the data in ds_data and us_data (e.g save to file or DB for monitoring or troubleshooting purposes).
 
 <b>Script output sample</b>
 ![Script output Linux](screenshot-output-linux.png)
