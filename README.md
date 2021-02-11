@@ -1,7 +1,13 @@
 # Vodafone Station Read
-Read DOCSIS status data from Arris TG3442DE ("Vodafone Station" in Germany)
+Read DOCSIS3.1 status data from Vodafone Station (Germany) (Arris TG3442DE Cable Router)
 
-<b>usage:</b> vodafone_station.py password
+Update Infos:
+  - Version to work with the Firmware-Version: 01.02.068.11.EURO.SIP and full DOCSIS3.1 in Down- and Upload.
+  - Fixed some website parser stuff.
+  - German VF-Station needed some hardcode stuff in german.
+  - DOCSIS3.1 OFDMA Upload supportet.
+
+<b>usage:</b> vodafone_station.py ip password
 
 This python script connects to the web interface of the Arris TG3442DE, performs a login and grabs the DOCSIS status data (downstream and upstream parameters). The unique argument is the router web interface password without quotes.
 
@@ -11,9 +17,8 @@ The script requires :
   - Firefox
   - Geckodriver
   
-The script has been tested with firmware 01.02.037.03.12.EURO.SIP in following environments :
-  - Linux (KDE Neon 2019.07.04-1120 x86-64), Python 3 (3.6.9), Selenium (3.141.0), Firefox (74.0), Geckodriver (74.0.1)
-  - Windows 7 (x86), Python 3 (3.8.2), Selenium (3.141.0), Firefox (74.0.1), Geckodriver (71.0.0.7222)
+The script has been tested with firmware 01.02.068.11.EURO.SIP in following environments :
+  - Linux, Ubuntu 20.04
   
 Due to the complex code structure of the router's web interface and the usage of javascript in the login process, the script uses the selenium webdriver. The browser used with Selenium is Firefox in headless (without interface) mode.
 

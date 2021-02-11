@@ -1,4 +1,10 @@
 #!/usr/bin/python3
+#
+# enhanced for IP, PW as ARG.
+# some parse fixes
+# hardcoded GERMAN language, caused by my german VF Station.
+# new supported OFDMA Upload Channel.
+# tested with Firmware-Version: 01.02.068.11.EURO.SIP
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -12,26 +18,34 @@ import argparse
 
 # Get password given as argument
 parser = argparse.ArgumentParser()
+parser.add_argument("ipadr", help="The IP address of the Vodafone Station")
 parser.add_argument("password", help="Vodafone Station web interface password")
 args = parser.parse_args()
 
 # Connection parameters
+router_adr = args.ipadr
 router_pwd = args.password
-router_adr = "easybox.local"
+#router_pwd = "<PW>"
+#router_adr = "<IP>"
 
 # open Firefox in headless mode and connect to Vodafone Station
 options = Options()
 options.headless = True                         # DEBUG : Turn to False to see the browser
 driver = webdriver.Firefox(options=options)
 driver.get ("http://"+router_adr)
+#driver.get ("http://"+router_adr+"/?status_docsis")
 
 # fill password field with password and clicl on "Log In" (user field is prefilled with "admin" and inactive on Vodafone Station (Arris TG3442DE)
+#driver.switchTo().frame(1);
+WebDriverWait(driver, 4000).until(EC.presence_of_element_located((By.XPATH, "//*[@id='language-info']")))
 driver.find_element_by_id("Password").send_keys(router_pwd)
 driver.find_element_by_xpath("//input[@type='button']").click() 
+#driver.switchTo().defaultContent();
 
 # go to Docsis status page after login
 driver.get ("http://"+router_adr+"/?status_docsis")
 
+#driver.switchTo().frame(0);
 # wait for page being built up (i.e the usTable being present)
 WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//*[@id='usTable']")))
 
@@ -135,7 +149,7 @@ while channel <= ds_channel_max:
             ds_data_line[6] = float(ds_raw_data[array_row][5])
             
             # set LockStatus to True if string is YES
-            if ds_raw_data[array_row][6] == "YES":
+            if ds_raw_data[array_row][6] == "JA":
                 ds_data_line[7] = True
             # else (if NO or anything else) set LockStatus on False
             else:
@@ -192,8 +206,14 @@ while channel <= us_channel_max:
             us_data_line[0] = int(us_raw_data[array_row][0])
             
             # copy frequency
-            us_data_line[1] = int(us_raw_data[array_row][2])
-            
+            # if ODFMA band extract channel boundaries from "XXX~XXX" format and compute central frequency
+            if us_raw_data[array_row][1] == "OFDMA":
+                ofdma_freq_band = us_raw_data[array_row][2].split("~")
+                us_data_line[1] = int((float(ofdma_freq_band[0])+float(ofdma_freq_band[1]))/2)
+            else:
+            # SC-QAM band or other
+                us_data_line[1] = int(us_raw_data[array_row][2])
+
             # copy channel type
             us_data_line[2] = us_raw_data[array_row][1]
             
@@ -207,7 +227,7 @@ while channel <= us_channel_max:
             us_data_line[5] = float(tx_power[1])
             
             # set RangingStatus to True if string is SUCCESS
-            if us_raw_data[array_row][5] == "SUCCESS":
+            if us_raw_data[array_row][5] == "Erfolgreich":
                 us_data_line[6] = True
             # else (if anything else) set RangingStatus on False
             else:
